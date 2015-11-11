@@ -8,7 +8,8 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class TKTokenTextView;
+@class TKTokenTextView, TKTokenFieldAttachment;
+
 @interface TKTokenFieldCell : NSTextFieldCell
 
 @property (assign,readwrite) NSTokenStyle tokenStyle;
@@ -21,4 +22,9 @@
 + (NSTimeInterval)defaultCompletionDelay;
 // Character set...
 + (NSCharacterSet *)defaultTokenizingCharacterSet;
+
+- (TKTokenFieldAttachment *)makeTokenFieldAttachment:(NSString*) tokenString range:(NSRange) range;
+- (void) prepareInsertion:(TKTokenFieldAttachment *) att range:(NSRange) range rect:(NSRect) rect;
+- (void) finishInsertion:(TKTokenFieldAttachment *) att range:(NSRange) range rect:(NSRect) rect;
+
 @end

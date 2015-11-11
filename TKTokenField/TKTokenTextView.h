@@ -8,8 +8,10 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class TKTokenField;
+@class TKTokenFieldCell;
+
 @interface TKTokenTextView : NSTextView
+
 @property (assign,readwrite) NSTokenStyle tokenStyle;
 @property (assign,readwrite) NSTimeInterval completionDelay;
 
@@ -23,5 +25,7 @@
 @property (assign,readwrite) BOOL isCompleting;
 
 - (NSRange) rangeOfAttachment:(NSTextAttachment*) theAttachment indexOfToken:(NSInteger *) index;
-- (TKTokenField *) tokenField;
+
+- (TKTokenFieldCell *) tokenFieldCell;
+
 @end

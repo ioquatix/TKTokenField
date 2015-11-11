@@ -20,13 +20,17 @@
     return self;
 }
 
-- (TKTokenField*) tokenField {
+- (TKTokenFieldCell*) tokenFieldCell {
     //Peek the responder chain
     NSResponder * r = [self nextResponder];
-    while (r && ![r isKindOfClass:[TKTokenField class]]) {
+
+	while (r && ![r isKindOfClass:[TKTokenFieldCell class]]) {
         r = [r nextResponder];
     }
-    return (TKTokenField*) r;
+
+	NSAssert(r != nil, @"Token field cell was not found in responder chain...");
+
+    return (TKTokenFieldCell*) r;
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
@@ -58,19 +62,20 @@
     
     NSAttributedString * tokenString = [self.textStorage attributedSubstringFromRange:effectiveRange];
 
-    TKTokenFieldAttachment *token = [self.tokenField makeTokenFieldAttachment:nil editingString:[tokenString string] range:effectiveRange];
+    TKTokenFieldAttachment *token = [self.tokenFieldCell makeTokenFieldAttachment:nil editingString:[tokenString string] range:effectiveRange];
+
     NSAttributedString * replacementString = [NSAttributedString attributedStringWithAttachment:token];
 
     NSRect rect = [self firstRectForCharacterRange:effectiveRange actualRange:nil]; //screen coordinates
     rect = [self.window convertRectFromScreen:rect];
     rect.origin = [self convertPoint:rect.origin fromView:nil];
 
-    [self.tokenField prepareInsertion:token range:effectiveRange rect:rect];
+    [self.tokenFieldCell prepareInsertion:token range:effectiveRange rect:rect];
     if ([self shouldChangeTextInRange:effectiveRange replacementString:replacementString.string]) {
         [self.textStorage replaceCharactersInRange:effectiveRange withAttributedString:replacementString];
         [self didChangeText];
     }
-    [self.tokenField finishInsertion:token range:effectiveRange rect:rect];
+    [self.tokenFieldCell finishInsertion:token range:effectiveRange rect:rect];
 }
 
 - (BOOL) becomeFirstResponder {
@@ -116,15 +121,16 @@
                         
                         if ([subsequentlyTypedText isEqualToString:initiallyTypedText]) {
                             //Support asynchronous and synchronous versions
-                            if ([self.tokenField.delegate respondsToSelector:@selector(tokenField:completionsForSubstring:indexOfToken:indexOfSelectedItem:)]) {
+							/*
+                            if ([self.tokenFieldCell.delegate respondsToSelector:@selector(tokenField:completionsForSubstring:indexOfToken:indexOfSelectedItem:)]) {
                                 NSInteger preferredItem;
-                                self.completions = [(id<TKTokenFieldDelegate>)self.tokenField.delegate tokenField:self.tokenField completionsForSubstring:subsequentlyTypedText indexOfToken:indexOfToken indexOfSelectedItem:&preferredItem];
+                                self.completions = [(id<TKTokenFieldDelegate>)self.tokenFieldCell.delegate tokenField:self.tokenField completionsForSubstring:subsequentlyTypedText indexOfToken:indexOfToken indexOfSelectedItem:&preferredItem];
                                 self.indexOfCompletion = preferredItem;
                                 self.completionRange = subsequentlyTypedTextRange;
                                 self.previousCompletionString = subsequentlyTypedText;
                                 [self complete:self];
-                            } else if ([self.tokenField.delegate respondsToSelector:@selector(tokenField:completionsForSubstring:indexOfToken:completionHandler:)]) {
-                                [(id<TKTokenFieldDelegate>)self.tokenField.delegate tokenField:self.tokenField completionsForSubstring:subsequentlyTypedText indexOfToken:indexOfToken completionHandler:^(NSArray *suggestions, NSInteger preferredItem, NSError *error) {
+                            } else if ([self.tokenFieldCell.delegate respondsToSelector:@selector(tokenField:completionsForSubstring:indexOfToken:completionHandler:)]) {
+                                [(id<TKTokenFieldDelegate>)self.tokenFieldCell.delegate tokenField:self.tokenField completionsForSubstring:subsequentlyTypedText indexOfToken:indexOfToken completionHandler:^(NSArray *suggestions, NSInteger preferredItem, NSError *error) {
 
                                     NSInteger indexOfToken = -1;
                                     NSRange finallyTypedTextRange = [self rangeOfAttachment:nil indexOfToken:&indexOfToken];
@@ -144,6 +150,7 @@
                                     }
                                 }];
                             }
+							*/
                         }
                     }
                 });
@@ -155,7 +162,7 @@
 - (void) didChangeText {
     [super didChangeText];
     
-    [self.tokenField invalidateIntrinsicContentSize];
+    //[self.tokenField invalidateIntrinsicContentSize];
 }
 
 - (NSArray *)completionsForPartialWordRange:(NSRange)charRange
@@ -192,6 +199,7 @@
     
     rect.origin.y += 6;
     rect.size.height = 12;
+    /*
     [self.tokenField scrollRectToVisible:rect];
     
     if (selectedRange.length==1) {
@@ -200,5 +208,6 @@
         
         [self.tokenField tokenSelected:(TKTokenFieldAttachment*)token range:selectedRange rect:oRect];
     }
+    */
 }
 @end

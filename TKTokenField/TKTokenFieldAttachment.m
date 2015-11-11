@@ -13,4 +13,5 @@
 - (BOOL) isEqualTo:(id)object {
     return object == self;
 }
+
 @end

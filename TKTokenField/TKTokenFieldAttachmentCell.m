@@ -137,6 +137,7 @@ static CGFloat const kOEXTokenAttachmentTokenMargin = 3;
     [self drawWithFrame:cellFrame inView:controlView];
 }
 
+/*
 - (NSMenu*)delegateMenuOfView:(NSView *)controlView {
     if ([((TKTokenTextView*)controlView).tokenField.delegate respondsToSelector:@selector(tokenField:hasMenuForRepresentedObject:)]) {
         if ([(id<TKTokenFieldDelegate>)((TKTokenTextView*)controlView).tokenField.delegate tokenField:((TKTokenTextView*)controlView).tokenField hasMenuForRepresentedObject:((TKTokenFieldAttachment*)self.attachment).content]) {
@@ -158,6 +159,7 @@ static CGFloat const kOEXTokenAttachmentTokenMargin = 3;
     }
     return nil;
 }
+*/
 
 - (BOOL)wantsToTrackMouse {
     return YES;
@@ -190,11 +192,11 @@ static CGFloat const kOEXTokenAttachmentTokenMargin = 3;
                 if (NSPointInRect(pos, cellFrame)) {
                     if (theEvent.clickCount == 2) {
                         NSString * text = ((NSCell*)self.attachment.attachmentCell).stringValue;
-                        
+                        /*
                         if ([((TKTokenTextView*)controlView).tokenField.delegate respondsToSelector:@selector(tokenField:editingStringForRepresentedObject:)]) {
                             text = [(id<TKTokenFieldDelegate>)((TKTokenTextView*)controlView).tokenField.delegate tokenField:((TKTokenTextView*)controlView).tokenField editingStringForRepresentedObject:((TKTokenFieldAttachment*)self.attachment).content];
                         }
-                        
+                        */
                         [(TKTokenTextView*)controlView replaceCharactersInRange:[(TKTokenTextView*)controlView rangeOfAttachment:self.attachment indexOfToken:nil] withString:text];
                     } else {
                         [(TKTokenTextView*)controlView setSelectedRange:[(TKTokenTextView*)controlView rangeOfAttachment:self.attachment indexOfToken:nil]];
